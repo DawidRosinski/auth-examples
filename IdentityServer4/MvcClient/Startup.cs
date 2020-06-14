@@ -8,20 +8,27 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace IS4
+namespace MvcClient
 {
     public class Startup
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            //this add internally Authentication and Authorization
-            services.AddIdentityServer()
-                .AddInMemoryApiResources(Configuration.GetApis())
-                .AddInMemoryIdentityResources(Configuration.GetIdentityResources())
-                .AddInMemoryClients(Configuration.GetClients())
-                // this generate the developer certificate for signing token (generete seceret key)
-                // it generate the tempkey.rsa file
-                .AddDeveloperSigningCredential();
+            services.AddAuthentication(config =>
+            {
+                config.DefaultScheme = "Cookie";
+                config.DefaultChallengeScheme = "oidc";
+            })
+                .AddCookie("Cookie")
+                .AddOpenIdConnect("oidc", config =>
+                {
+                    config.Authority = "https://localhost:44308/";
+                    config.ClientId = "client_id_mvc";
+                    config.ClientSecret = "client_secret_mvc";
+                    config.SaveTokens = true;
+
+                    config.ResponseType = "code";
+                });
 
             services.AddControllersWithViews();
         }
@@ -35,7 +42,9 @@ namespace IS4
 
             app.UseRouting();
 
-            app.UseIdentityServer();
+            app.UseAuthentication();
+
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
