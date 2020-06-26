@@ -15,12 +15,20 @@ namespace IS4
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
+                new IdentityResource
+                {
+                    Name = "rc.scope",
+                    UserClaims =
+                    {
+                        "rc.grandma"
+                    }
+                }
             };
 
         public static IEnumerable<ApiResource> GetApis() =>
             new List<ApiResource>
             {
-                new ApiResource("ApiOne"),
+                new ApiResource("ApiOne", new string[] { "rc.api.grandma" }),
                 new ApiResource("ApiTwo"),
             };
 
@@ -52,8 +60,13 @@ namespace IS4
                         //"openid"
                         IdentityServer4.IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServer4.IdentityServerConstants.StandardScopes.Profile,
+                        "rc.scope"
 
                     },
+
+                    // puts all the claims in the id token
+                    // AlwaysIncludeUserClaimsInIdToken = true,
+
                     RequireConsent = false,
                 }
             };
