@@ -75,7 +75,9 @@ namespace IS4
                     ClientId = "client_id_js",
 
                     AllowedGrantTypes = GrantTypes.Implicit,
+
                     RedirectUris = { "https://localhost:44300/home/signin" },
+                    AllowedCorsOrigins = { "https://localhost:44300" },
 
                     AllowedScopes =
                     {

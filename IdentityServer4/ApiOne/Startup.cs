@@ -22,6 +22,12 @@ namespace ApiOne
                     config.Audience = "ApiOne";
                 });
 
+            services.AddCors(config =>
+                config.AddPolicy("AllowAll",
+                    p => p.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader()));
+
             services.AddHttpClient();
 
             services.AddControllers();
@@ -33,6 +39,8 @@ namespace ApiOne
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors("AllowAll");
 
             app.UseRouting();
 
